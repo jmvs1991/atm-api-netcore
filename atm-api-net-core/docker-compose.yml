@@ -1,0 +1,15 @@
+version: '3.3'
+
+services:
+  ATM_BD:
+    image: mcr.microsoft.com/mssql/server
+    environment: 
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=SqlServer2021
+    ports: 
+      - '14333:1433'
+    volumes:
+      - atm_bd_data:/var/opt/mssql
+volumes:
+  atm_bd_data:
+    external: true
