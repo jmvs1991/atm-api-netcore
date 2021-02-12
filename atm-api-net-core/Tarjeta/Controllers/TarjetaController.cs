@@ -40,23 +40,27 @@ namespace atm_api_net_core.Tarjeta.Controllers
 
         // POST api/<TarjetaController>
         [HttpPost]
-        public void Post([FromBody] TarjetaEntity value)
+        public TarjetaEntity Post([FromBody] TarjetaEntity value)
         {
 
-            this._tarjetaService.Create(value);
+            return this._tarjetaService.Create(value);
 
         }
 
         // PUT api/<TarjetaController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public TarjetaEntity Put(int id, [FromBody] TarjetaEntity value)
         {
+
+            return this._tarjetaService.Update(value);
+
         }
 
         // DELETE api/<TarjetaController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            this._tarjetaService.Delete(id);
         }
     }
 }
