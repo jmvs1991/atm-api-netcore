@@ -14,6 +14,10 @@ namespace atm_api_net_core
 
 
         }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<TarjetaEntity>().HasIndex(t => t.Numero).IsUnique();
+        }
 
     }
 }

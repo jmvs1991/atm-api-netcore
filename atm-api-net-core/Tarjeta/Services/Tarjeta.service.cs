@@ -3,10 +3,11 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using atm_api_net_core.Tarjeta.Entities;
 using System.Collections.Generic;
 using System.Linq;
+using atm_api_net_core.Models;
 
 namespace atm_api_net_core.Tarjeta.Services
 {
-    public class TarjetaService : IService<TarjetaEntity>
+    public class TarjetaService : IService<TarjetaEntity, TarjetaRequest>
     {
 
         private readonly DbSet<TarjetaEntity> _tarjetaRepo;
@@ -28,10 +29,14 @@ namespace atm_api_net_core.Tarjeta.Services
             return _tarjetaRepo.Find(id);
         }
 
-        public TarjetaEntity Create(TarjetaEntity tarjeta)
+        public TarjetaEntity Create(TarjetaRequest tarjeta)
         {
 
-            EntityEntry<TarjetaEntity> nuevaTarjeta = _tarjetaRepo.Add(tarjeta);
+            TarjetaEntity tarjetaEntity = new TarjetaEntity();
+            tarjetaEntity.Numero = tarjeta.Numero;
+            tarjetaEntity.Pin = tarjeta.Pin;
+
+            EntityEntry<TarjetaEntity> nuevaTarjeta = _tarjetaRepo.Add(tarjetaEntity);
             _context.SaveChanges();
 
             return nuevaTarjeta.Entity;
@@ -50,7 +55,7 @@ namespace atm_api_net_core.Tarjeta.Services
         public bool Delete(int id)
         {
 
-            TarjetaEntity tarjeta = this._tarjetaRepo.Find(id);
+            TarjetaEntity tarjeta = _tarjetaRepo.Find(id);
             _tarjetaRepo.Remove(tarjeta);
             _context.SaveChanges();
             return true;

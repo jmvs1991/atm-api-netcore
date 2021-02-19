@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using atm_api_net_core.Models;
+using atm_api_net_core.Tarjeta.Entities;
+using atm_api_net_core.Tarjeta.Services;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using atm_api_net_core.Tarjeta.Services;
-using atm_api_net_core.Tarjeta.Entities;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -26,24 +25,105 @@ namespace atm_api_net_core.Tarjeta.Controllers
 
         // GET: api/<TarjetaController>
         [HttpGet]
-        public List<TarjetaEntity> Get()
+        public ActionResult<TarjetaResponse> Get()
         {
-            return this._tarjetaService.Find();
+
+            TarjetaResponse respuesta = new TarjetaResponse();
+
+            try
+            {
+
+                List<TarjetaEntity> tarjetas = _tarjetaService.Find();
+
+                respuesta.Resultado = "S";
+                respuesta.Datos = tarjetas;
+
+            }
+            catch(Exception ex)
+            {
+
+                respuesta.Resultado = "E";
+                respuesta.Mensaje = ex.Message.ToString();
+
+            }
+
+            return Ok(respuesta);
+
         }
 
         // GET api/<TarjetaController>/5
         [HttpGet("{id}")]
-        public TarjetaEntity Get(int id)
+        public ActionResult<TarjetaResponse> Get(int id)
         {
-            return this._tarjetaService.FindById(id) ?? new TarjetaEntity();
+            //return this._tarjetaService.FindById(id) ?? new TarjetaEntity();
+
+            TarjetaResponse respuesta = new TarjetaResponse();
+
+            try
+            {
+
+                TarjetaEntity tarjeta = _tarjetaService.FindById(id);
+
+                if (tarjeta != null)
+                {
+                    
+                    respuesta.Resultado = "S";
+                    respuesta.Datos.Add(tarjeta);
+
+                }
+                else
+                {
+
+                    respuesta.Resultado = "N";
+                    respuesta.Mensaje = "El id de la tarjeta no existe";
+
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+
+                respuesta.Resultado = "E";
+                respuesta.Mensaje = ex.Message.ToString();
+
+            }
+
+            return Ok(respuesta);
         }
 
         // POST api/<TarjetaController>
         [HttpPost]
-        public TarjetaEntity Post([FromBody] TarjetaEntity value)
+        public ActionResult<TarjetaResponse> Post([FromBody] TarjetaRequest tarjeta)
         {
 
-            return this._tarjetaService.Create(value);
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest(ModelState);
+            }
+
+            TarjetaResponse respuesta = new TarjetaResponse();
+
+            try
+            {
+
+                TarjetaEntity nuevaTarjeta = _tarjetaService.Create(tarjeta);
+                respuesta.Resultado = "S";
+                respuesta.Datos.Add(nuevaTarjeta);
+
+
+            }
+            catch (Exception ex)
+            {
+
+                respuesta.Resultado = "E";
+                respuesta.Mensaje = ex.Message.ToString();
+
+            }
+
+            return Ok(respuesta);
+
+            //return 
 
         }
 
