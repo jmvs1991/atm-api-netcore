@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using atm_api_net_core;
 
 namespace atm_api_net_core.Migrations
 {
     [DbContext(typeof(AtmContext))]
-    partial class AtmContextModelSnapshot : ModelSnapshot
+    [Migration("20210226022539_dateUpdateColumn")]
+    partial class dateUpdateColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,6 +36,7 @@ namespace atm_api_net_core.Migrations
                         .HasColumnName("Bloqueado");
 
                     b.Property<DateTime>("FechaActualizacion")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")
                         .HasColumnName("Fecha_Actualizacion");
 
@@ -67,18 +70,6 @@ namespace atm_api_net_core.Migrations
                         .IsUnique();
 
                     b.ToTable("Tarjeta");
-
-                    b.HasData(
-                        new
-                        {
-                            IdTarjeta = 1,
-                            Bloqueado = false,
-                            FechaActualizacion = new DateTime(2021, 2, 25, 23, 41, 49, 9, DateTimeKind.Local).AddTicks(5140),
-                            FechaCreacion = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Intentos = 0,
-                            Numero = "1111111111111111",
-                            Pin = "1234"
-                        });
                 });
 #pragma warning restore 612, 618
         }

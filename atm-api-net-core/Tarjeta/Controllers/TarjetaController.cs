@@ -92,9 +92,61 @@ namespace atm_api_net_core.Tarjeta.Controllers
             return Ok(respuesta);
         }
 
+        [HttpPost("ValidarNumero")]
+        public ActionResult<TarjetaResponse> ValidarNumero([FromBody]TarjetaRequest.ValidarNumero validarNumero)
+        {
+
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest(ModelState);
+            }
+
+            TarjetaResponse respuesta = new TarjetaResponse();
+
+            try
+            {
+
+                TarjetaEntity tarjeta = _tarjetaService.FindByNumero(validarNumero.Numero);
+
+                if (tarjeta != null)
+                {
+
+                    if (tarjeta.Bloqueado) 
+                    {
+                        respuesta.Resultado = "N";
+                        respuesta.Mensaje = "La tarjeta se encuentra bloqueada";
+                    }
+                    else
+                    {
+                        respuesta.Resultado = "S";
+                        respuesta.Datos.Add(tarjeta);
+                    }
+
+                }
+                else
+                {
+
+                    respuesta.Resultado = "N";
+                    respuesta.Mensaje = "El número de la tarjeta no existe";
+
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+
+                respuesta.Resultado = "E";
+                respuesta.Mensaje = ex.Message.ToString();
+
+            }
+
+            return Ok(respuesta);
+        }
+
         // POST api/<TarjetaController>
         [HttpPost]
-        public ActionResult<TarjetaResponse> Post([FromBody] TarjetaRequest tarjeta)
+        public ActionResult<TarjetaResponse> Post([FromBody] TarjetaRequest.Create tarjeta)
         {
 
             if (ModelState.IsValid == false)
@@ -123,24 +175,62 @@ namespace atm_api_net_core.Tarjeta.Controllers
 
             return Ok(respuesta);
 
-            //return 
-
         }
 
         // PUT api/<TarjetaController>/5
         [HttpPut("{id}")]
-        public TarjetaEntity Put(int id, [FromBody] TarjetaEntity value)
+        public ActionResult<TarjetaResponse> Put(int id, [FromBody] TarjetaRequest.Update tarjeta)
         {
 
-            return this._tarjetaService.Update(value);
+            if (ModelState.IsValid == false)
+            {
+                return BadRequest(ModelState);
+            }
+
+            TarjetaResponse respuesta = new TarjetaResponse();
+
+            try
+            {
+
+                TarjetaEntity nuevaTarjeta = _tarjetaService.Update(id, tarjeta);
+                respuesta.Resultado = "S";
+                respuesta.Datos.Add(nuevaTarjeta);
+
+            }
+            catch (Exception ex)
+            {
+
+                respuesta.Resultado = "E";
+                respuesta.Mensaje = ex.Message.ToString();
+
+            }
+
+            return Ok(respuesta);
 
         }
 
         // DELETE api/<TarjetaController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult<TarjetaResponse> Delete(int id)
         {
-            this._tarjetaService.Delete(id);
+            TarjetaResponse respuesta = new TarjetaResponse();
+
+            try
+            {
+
+                bool resDelete = _tarjetaService.Delete(id);
+                respuesta.Resultado = resDelete == true ? "S" : "N";
+
+            }
+            catch (Exception ex)
+            {
+
+                respuesta.Resultado = "E";
+                respuesta.Mensaje = ex.Message.ToString();
+
+            }
+
+            return Ok(respuesta);
         }
     }
 }

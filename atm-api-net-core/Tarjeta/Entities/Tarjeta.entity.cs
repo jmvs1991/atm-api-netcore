@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -27,6 +28,21 @@ namespace atm_api_net_core.Tarjeta.Entities
         [MaxLength(4)]
 
         public string Pin { get; set; }
+
+        [Required]
+        [Column("Bloqueado")]
+        public bool Bloqueado { get; set; }
+
+        [Required]
+        [Column("Intentos")]
+        public int Intentos { get; set; }
+
+        [Column("Fecha_Creacion")]
+        public DateTime FechaCreacion { get; set; }
+
+        [Column("Fecha_Actualizacion")]
+        public DateTime FechaActualizacion { get; set; }
+
 
     }
 }

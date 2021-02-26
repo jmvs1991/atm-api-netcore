@@ -4,10 +4,11 @@ using atm_api_net_core.Tarjeta.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using atm_api_net_core.Models;
+using System;
 
 namespace atm_api_net_core.Tarjeta.Services
 {
-    public class TarjetaService : IService<TarjetaEntity, TarjetaRequest>
+    public class TarjetaService : IService<TarjetaEntity, TarjetaRequest.Create, TarjetaRequest.Update>
     {
 
         private readonly DbSet<TarjetaEntity> _tarjetaRepo;
@@ -29,7 +30,12 @@ namespace atm_api_net_core.Tarjeta.Services
             return _tarjetaRepo.Find(id);
         }
 
-        public TarjetaEntity Create(TarjetaRequest tarjeta)
+        public TarjetaEntity FindByNumero(string Numero)
+        {
+            return _tarjetaRepo.First(tarjeta => tarjeta.Numero == Numero);
+        }
+
+        public TarjetaEntity Create(TarjetaRequest.Create tarjeta)
         {
 
             TarjetaEntity tarjetaEntity = new TarjetaEntity();
@@ -42,10 +48,19 @@ namespace atm_api_net_core.Tarjeta.Services
             return nuevaTarjeta.Entity;
         }
 
-        public TarjetaEntity Update(TarjetaEntity tarjeta)
+        public TarjetaEntity Update(int id, TarjetaRequest.Update tarjeta)
         {
 
-            EntityEntry<TarjetaEntity> modTarjeta =  _tarjetaRepo.Update(tarjeta);
+            TarjetaEntity tarjetaEntity = _tarjetaRepo.Find(id);
+
+            if (tarjetaEntity == null)
+            {
+                throw new Exception("El id de la tarjeta no existe");
+            }
+
+            tarjetaEntity.Pin = tarjeta.Pin;
+
+            EntityEntry<TarjetaEntity> modTarjeta =  _tarjetaRepo.Update(tarjetaEntity);
             _context.SaveChanges();
 
             return modTarjeta.Entity;
@@ -55,8 +70,14 @@ namespace atm_api_net_core.Tarjeta.Services
         public bool Delete(int id)
         {
 
-            TarjetaEntity tarjeta = _tarjetaRepo.Find(id);
-            _tarjetaRepo.Remove(tarjeta);
+            TarjetaEntity tarjetaEntity = _tarjetaRepo.Find(id);
+
+            if (tarjetaEntity == null)
+            {
+                throw new Exception("El id de la tarjeta no existe");
+            }
+
+            _tarjetaRepo.Remove(tarjetaEntity);
             _context.SaveChanges();
             return true;
 

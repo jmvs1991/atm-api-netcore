@@ -2,7 +2,7 @@
 
 namespace atm_api_net_core
 {
-    interface IService<Entity, rqCreate>
+    interface IService<Entity, rqCreate, rqUpdate>
     {
         public List<Entity> Find();
         
@@ -10,7 +10,7 @@ namespace atm_api_net_core
 
         public Entity Create(rqCreate request);
 
-        public Entity Update(Entity entity);
+        public Entity Update(int id, rqUpdate entity);
 
         public bool Delete(int id);
 
