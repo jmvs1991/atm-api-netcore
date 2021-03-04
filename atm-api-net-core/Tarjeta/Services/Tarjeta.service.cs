@@ -8,7 +8,7 @@ using System;
 
 namespace atm_api_net_core.Tarjeta.Services
 {
-    public class TarjetaService : IService<TarjetaEntity, TarjetaRequest.Create, TarjetaRequest.Update>
+    public class TarjetaService : ITarjetaService
     {
 
         private readonly DbSet<TarjetaEntity> _tarjetaRepo;

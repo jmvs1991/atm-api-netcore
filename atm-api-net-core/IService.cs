@@ -2,7 +2,7 @@
 
 namespace atm_api_net_core
 {
-    interface IService<Entity, rqCreate, rqUpdate>
+    public interface IService<Entity, rqCreate, rqUpdate>
     {
         public List<Entity> Find();
         

@@ -1,6 +1,5 @@
 ﻿using atm_api_net_core.Models;
 using atm_api_net_core.Tarjeta.Entities;
-using atm_api_net_core.Tarjeta.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -14,12 +13,11 @@ namespace atm_api_net_core.Tarjeta.Controllers
     public class TarjetaController : ControllerBase
     {
 
-        private readonly TarjetaService _tarjetaService;
+        private readonly ITarjetaService _tarjetaService;
 
-        public TarjetaController(AtmContext context)
+        public TarjetaController(ITarjetaService tarjetaService)
         {
-
-            _tarjetaService = new TarjetaService(context);
+            _tarjetaService = tarjetaService;
 
         }
 
@@ -28,7 +26,7 @@ namespace atm_api_net_core.Tarjeta.Controllers
         public ActionResult<TarjetaResponse> Get()
         {
 
-            TarjetaResponse respuesta = new TarjetaResponse();
+            IResponse<TarjetaEntity> respuesta = new TarjetaResponse();
 
             try
             {
@@ -57,7 +55,7 @@ namespace atm_api_net_core.Tarjeta.Controllers
         {
             //return this._tarjetaService.FindById(id) ?? new TarjetaEntity();
 
-            TarjetaResponse respuesta = new TarjetaResponse();
+            IResponse<TarjetaEntity> respuesta = new TarjetaResponse();
 
             try
             {
@@ -101,7 +99,7 @@ namespace atm_api_net_core.Tarjeta.Controllers
                 return BadRequest(ModelState);
             }
 
-            TarjetaResponse respuesta = new TarjetaResponse();
+            IResponse<TarjetaEntity> respuesta = new TarjetaResponse();
 
             try
             {
@@ -154,7 +152,7 @@ namespace atm_api_net_core.Tarjeta.Controllers
                 return BadRequest(ModelState);
             }
 
-            TarjetaResponse respuesta = new TarjetaResponse();
+            IResponse<TarjetaEntity> respuesta = new TarjetaResponse();
 
             try
             {
@@ -187,7 +185,7 @@ namespace atm_api_net_core.Tarjeta.Controllers
                 return BadRequest(ModelState);
             }
 
-            TarjetaResponse respuesta = new TarjetaResponse();
+            IResponse<TarjetaEntity> respuesta = new TarjetaResponse();
 
             try
             {
@@ -213,7 +211,7 @@ namespace atm_api_net_core.Tarjeta.Controllers
         [HttpDelete("{id}")]
         public ActionResult<TarjetaResponse> Delete(int id)
         {
-            TarjetaResponse respuesta = new TarjetaResponse();
+            IResponse<TarjetaEntity> respuesta = new TarjetaResponse();
 
             try
             {

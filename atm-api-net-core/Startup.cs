@@ -5,6 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using atm_api_net_core.Tarjeta;
+using atm_api_net_core.Tarjeta.Services;
 
 namespace atm_api_net_core
 {
@@ -23,6 +25,7 @@ namespace atm_api_net_core
             string conexion = Configuration.GetConnectionString("atm_bd").ToString() ?? "";
 
             services.AddDbContext<AtmContext>(opt => opt.UseSqlServer(conexion));
+            services.AddScoped<ITarjetaService, TarjetaService>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
